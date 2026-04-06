@@ -1,0 +1,72 @@
+// Prisma Schema for Mahjong Soul Learning App
+// SQLite for development, PostgreSQL for production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  username  String
+  createdAt DateTime   @default(now())
+  progress  Progress[]
+}
+
+model GuestSession {
+  id           Int        @id @default(autoincrement())
+  sessionToken String     @unique
+  createdAt    DateTime   @default(now())
+  expiresAt    DateTime
+  progress     Progress[]
+}
+
+model Progress {
+  id           Int           @id @default(autoincrement())
+  userId       Int?
+  guestId      Int?
+  moduleId     Int
+  completed    Boolean       @default(false)
+  score        Int           @default(0)
+  lastAccessed DateTime      @default(now())
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guest        GuestSession? @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  module       Module        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@index([guestId, moduleId])
+}
+
+model Module {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  order       Int        @unique
+  content     String
+  type        String     @default("lesson")
+  createdAt   DateTime   @default(now())
+  progress    Progress[]
+}
+
+model Keyword {
+  id         Int    @id @default(autoincrement())
+  term       String @unique
+  definition String
+  category   String
+  examples   String @default("")
+}
+
+model Strategy {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  difficulty  String   @default("beginner")
+  content     String
+  createdAt   DateTime @default(now())
+}

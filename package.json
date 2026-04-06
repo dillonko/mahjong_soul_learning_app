@@ -1,0 +1,26 @@
+{
+  "name": "mahjong-soul-learning-app",
+  "private": true,
+  "workspaces": ["backend", "frontend", "shared"],
+  "scripts": {
+    "dev:backend": "cd backend && bun run dev",
+    "dev:frontend": "cd frontend && bun run dev",
+    "dev": "concurrently \"bun run dev:backend\" \"bun run dev:frontend\"",
+    "db:generate": "cd backend && bunx prisma generate",
+    "db:push": "cd backend && bunx prisma db push",
+    "db:seed": "cd backend && bun run seed",
+    "db:setup": "bun run db:generate && bun run db:push && bun run db:seed",
+    "build:frontend": "cd frontend && bun run build",
+    "test:backend": "cd backend && bun test",
+    "test:backend:unit": "cd backend && bun test tests/unit/",
+    "test:backend:integration": "cd backend && bun test tests/integration/",
+    "test:backend:e2e": "cd backend && bun test tests/e2e/",
+    "test:backend:coverage": "cd backend && bun test --coverage",
+    "test:frontend": "cd frontend && bun run test",
+    "test:frontend:unit": "cd frontend && bun run test:unit",
+    "test:frontend:integration": "cd frontend && bun run test:integration",
+    "test:frontend:coverage": "cd frontend && bun run test:coverage",
+    "test:frontend:e2e": "cd frontend && bun run test:e2e",
+    "test": "bun run test:backend && bun run test:frontend"
+  }
+}
